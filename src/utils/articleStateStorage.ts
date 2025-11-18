@@ -12,8 +12,6 @@ import {
 const FORM_STATE_STORAGE_KEY = 'blog-customizer_form_state';
 const PAGE_STATE_STORAGE_KEY = 'blog-customizer_page_state';
 
-const isBrowser = typeof window !== 'undefined';
-
 const mapOption = (
 	options: OptionType[],
 	storedOption?: OptionType,
@@ -61,10 +59,6 @@ export const normalizeArticleState = (
 });
 
 const loadState = (storageKey: string): ArticleStateType => {
-	if (!isBrowser) {
-		return normalizeArticleState(defaultArticleState);
-	}
-
 	try {
 		const rawState = window.localStorage.getItem(storageKey);
 
@@ -81,8 +75,6 @@ const loadState = (storageKey: string): ArticleStateType => {
 };
 
 const saveState = (storageKey: string, state: ArticleStateType) => {
-	if (!isBrowser) return;
-
 	window.localStorage.setItem(storageKey, JSON.stringify(state));
 };
 

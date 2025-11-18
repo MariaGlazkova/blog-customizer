@@ -19,7 +19,7 @@ export const ArrowButton = ({
 	ariaControls,
 }: ArrowButtonProps) => {
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-		if (event.key === 'Enter' || event.key === ' ') {
+		if (event.key === 'Enter') {
 			event.preventDefault();
 			onClick();
 		}
