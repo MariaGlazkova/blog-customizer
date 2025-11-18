@@ -12,6 +12,20 @@
 	transform: translate(0);
 }
 
+.overlay {
+	position: fixed;
+	inset: 0;
+	background-color: rgb(0 0 0 / 30%);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	pointer-events: none;
+}
+
+.overlay_visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
 .form {
 	display: flex;
 	flex-shrink: 0;
@@ -23,6 +37,48 @@
 	padding: 50px 31px;
 	background-color: #ffffff;
 	border-right: 1px solid #000000;
+}
+
+.title {
+	margin: 0 0 30px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 25px;
+}
+
+.label {
+	margin-bottom: 4px;
+}
+
+.fontSizeButtons {
+	display: flex;
+	gap: 10px;
+}
+
+.fontSizeButton {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	width: 100%;
+	height: 50px;
+	padding: 15px 17px;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.fontSizeButton:hover {
+	outline: 1px solid #ffc802;
+}
+
+.fontSizeButton_active {
+	background-color: #ffc802;
+	border: 1px solid #000000;
 }
 
 .bottomContainer {
