@@ -1,7 +1,8 @@
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
+import { RadioGroup } from 'src/ui/radio-group';
 import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
 import {
@@ -14,62 +15,89 @@ import {
 	type OptionType,
 } from 'src/constants/articleProps';
 
+import {
+	loadFormState,
+	loadPageState,
+	saveFormState,
+} from 'src/utils/articleStateStorage';
+
 import styles from './ArticleParamsForm.module.scss';
 
 const FORM_ID = 'article-params-form';
 
 type ArticleParamsFormProps = {
-	formState: ArticleStateType;
-	isOpen: boolean;
-	onChange: (field: keyof ArticleStateType, value: OptionType) => void;
-	onFormReset: () => void;
-	onApply: () => void;
-	onToggle: () => void;
-	onClose: () => void;
+	onArticleStateChange: (state: ArticleStateType) => void;
 };
 
 export const ArticleParamsForm = ({
-	formState,
-	isOpen,
-	onChange,
-	onFormReset,
-	onApply,
-	onToggle,
-	onClose,
+	onArticleStateChange,
 }: ArticleParamsFormProps) => {
+	const [isOpen, setIsOpen] = useState(false);
+	const initialStateRef = useRef<ArticleStateType>(loadPageState());
+	const [formState, setFormState] = useState<ArticleStateType>(() =>
+		loadFormState()
+	);
+
+	useEffect(() => {
+		saveFormState(formState);
+	}, [formState]);
+
+	const handleToggle = () => {
+		setIsOpen((prev) => !prev);
+	};
+
+	const handleClose = () => {
+		setIsOpen(false);
+	};
+
 	const handleOptionChange =
 		(field: keyof ArticleStateType) => (option: OptionType) => {
-			onChange(field, option);
+			setFormState((prev) => ({
+				...prev,
+				[field]: option,
+			}));
 		};
 
 	const handleFontSizeChange = (option: OptionType) => {
-		onChange('fontSizeOption', option);
+		setFormState((prev) => ({
+			...prev,
+			fontSizeOption: option,
+		}));
+	};
+
+	const handleFormReset = () => {
+		const initialState = initialStateRef.current;
+
+		setFormState(initialState);
+		onArticleStateChange(initialState);
 	};
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		onApply();
+		onArticleStateChange(formState);
 	};
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={onToggle} ariaControls={FORM_ID} />
+			<ArrowButton
+				isOpen={isOpen}
+				onClick={handleToggle}
+				ariaControls={FORM_ID}
+			/>
 			<div
 				className={clsx(styles.overlay, {
 					[styles.overlay_visible]: isOpen,
 				})}
-				onClick={onClose}
+				onClick={handleClose}
 				role='presentation'
 			/>
 			<aside
 				id={FORM_ID}
 				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
 				<form className={styles.form} onSubmit={handleSubmit}>
-					<h2 className={styles.title}>
-						<Text as='span' size={31} weight={800}>
-							ЗАДАЙТЕ ПАРАМЕТРЫ
-						</Text>
-					</h2>
+					<Text as='h2' size={31} weight={800}>
+						<span className={styles.title}>ЗАДАЙТЕ ПАРАМЕТРЫ</span>
+					</Text>
 
 					<div className={styles.field}>
 						<Select
@@ -81,27 +109,13 @@ export const ArticleParamsForm = ({
 					</div>
 
 					<div className={styles.field}>
-						<div className={styles.label}>
-							<Text size={12} weight={800} uppercase>
-								РАЗМЕР ШРИФТА
-							</Text>
-						</div>
-						<div className={styles.fontSizeButtons}>
-							{fontSizeOptions.map((option) => (
-								<button
-									key={option.value}
-									type='button'
-									className={clsx(styles.fontSizeButton, {
-										[styles.fontSizeButton_active]:
-											formState.fontSizeOption.value === option.value,
-									})}
-									onClick={() => handleFontSizeChange(option)}>
-									<Text size={18} weight={800}>
-										{option.title.toUpperCase()}
-									</Text>
-								</button>
-							))}
-						</div>
+						<RadioGroup
+							name='font-size'
+							title='РАЗМЕР ШРИФТА'
+							options={fontSizeOptions}
+							selected={formState.fontSizeOption}
+							onChange={handleFontSizeChange}
+						/>
 					</div>
 
 					<div className={styles.field}>
@@ -136,7 +150,7 @@ export const ArticleParamsForm = ({
 							title='СБРОСИТЬ'
 							htmlType='button'
 							type='clear'
-							onClick={onFormReset}
+							onClick={handleFormReset}
 						/>
 						<Button title='ПРИМЕНИТЬ' htmlType='submit' type='apply' />
 					</div>

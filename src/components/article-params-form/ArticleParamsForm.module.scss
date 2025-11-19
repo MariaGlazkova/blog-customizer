@@ -49,38 +49,6 @@
 	margin-bottom: 25px;
 }
 
-.label {
-	margin-bottom: 4px;
-}
-
-.fontSizeButtons {
-	display: flex;
-	gap: 10px;
-}
-
-.fontSizeButton {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	box-sizing: border-box;
-	width: 100%;
-	height: 50px;
-	padding: 15px 17px;
-	background-color: #ffffff;
-	border: 1px solid #000000;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-}
-
-.fontSizeButton:hover {
-	outline: 1px solid #ffc802;
-}
-
-.fontSizeButton_active {
-	background-color: #ffc802;
-	border: 1px solid #000000;
-}
-
 .bottomContainer {
 	display: flex;
 	justify-content: space-between;
