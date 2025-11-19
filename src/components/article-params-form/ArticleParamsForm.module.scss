@@ -12,6 +12,20 @@
 	transform: translate(0);
 }
 
+.overlay {
+	position: fixed;
+	inset: 0;
+	background-color: rgb(0 0 0 / 30%);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	pointer-events: none;
+}
+
+.overlay_visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
 .form {
 	display: flex;
 	flex-shrink: 0;
@@ -23,6 +37,16 @@
 	padding: 50px 31px;
 	background-color: #ffffff;
 	border-right: 1px solid #000000;
+}
+
+.title {
+	margin: 0 0 30px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 25px;
 }
 
 .bottomContainer {
